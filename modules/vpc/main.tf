@@ -59,10 +59,10 @@ resource "ibm_is_subnet" "subnet" {
 # Public Gateway Creation
 ##############################################################################
 
-/*
+
 resource "ibm_is_public_gateway" "public_gateway" {
   name           = "${var.prefix}-public-gateway"
   vpc            = ibm_is_vpc.vpc.id
   zone           = ibm_is_subnet.subnet["stock-app-subnet-1"].id
   resource_group = var.resource_group_id
-}*/
+}
