@@ -4,7 +4,7 @@ data "ibm_resource_group" "resource_group" {
 
 resource "ibm_is_vpc" "vpc" {
   name           = "vpc"
-  resource_group = data.ibm_resource_group.resource_group
+  resource_group = data.ibm_resource_group.resource_group.id
 }
 
 resource "ibm_is_subnet" "subnet_1" {
