@@ -24,6 +24,7 @@ locals {
       {
         subnet_name         = "${var.prefix}-${value.name}"
         address_prefix_name = "${var.prefix}-address-prefix-${value.name}"
+        public_gateway_name = "${var.prefix}-public-gateway-${value.name}"
         zone_name           = "${var.region}-${index(keys(var.subnets), zone) + 1}" # Contains region and zone
         cidr                = value.cidr
       }
@@ -52,6 +53,7 @@ resource "ibm_is_subnet" "subnet" {
   vpc             = ibm_is_vpc.vpc.id
   zone            = each.value.zone_name
   ipv4_cidr_block = ibm_is_vpc_address_prefix.address_prefix[each.value.subnet_name].cidr
+  public_gateway  = ibm_is_public_gateway.public_gateway[each.value.subnet_name].id
   resource_group  = var.resource_group_id
 }
 
@@ -59,10 +61,10 @@ resource "ibm_is_subnet" "subnet" {
 # Public Gateway Creation
 ##############################################################################
 
-
 resource "ibm_is_public_gateway" "public_gateway" {
-  name           = "${var.prefix}-public-gateway"
+  for_each       = local.subnet_object
+  name           = each.value.public_gateway_name
   vpc            = ibm_is_vpc.vpc.id
-  zone           = ibm_is_subnet.subnet["stock-app-subnet-1"].id
+  zone           = each.value.zone_name
   resource_group = var.resource_group_id
 }
