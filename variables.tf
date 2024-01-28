@@ -36,8 +36,72 @@ variable "resource_group" {
   default     = "Default"
 }
 
-variable "ipv4_cidr_block" {
-  description = "The IPv4 range of the subnet."
+
+
+##############################################################################
+# VPC Variables
+##############################################################################
+
+variable "subnets" {
+  description = "List of subnets for the vpc. For each item in each array, a subnet will be created. Items can be either CIDR blocks or total ipv4 addressess. Public gateways will be enabled only in zones where a gateway has been created"
+  type = object({
+    zone-1 = list(
+      object({
+        name = string
+        cidr = string
+    }))
+    zone-2 = list(
+      object({
+        name = string
+        cidr = string
+    }))
+    zone-3 = list(
+      object({
+        name = string
+        cidr = string
+    }))
+  })
+  default = {
+    zone-1 = [{
+      name = "subnet-1"
+      cidr = "10.10.10.0/24"
+    }],
+    zone-2 = [{
+      name = "subnet-2"
+      cidr = "10.20.10.0/24"
+    }],
+    zone-3 = [{
+      name = "subnet-3"
+      cidr = "10.30.10.0/24"
+    }]
+  }
+
+  validation {
+    error_message = "Keys for `subnets` must be in the order `zone-1`, `zone-2`, `zone-3`."
+    condition     = keys(var.subnets)[0] == "zone-1" && keys(var.subnets)[1] == "zone-2" && keys(var.subnets)[2] == "zone-3"
+  }
+}
+
+
+
+##############################################################################
+# Cluster Variables
+##############################################################################
+
+variable "kube_version" {
+  description = "The ID of the VPC that you want to use for your cluster."
   type        = string
-  default     = "10.0.0.0/24"
+  default     = "value"
+}
+
+variable "flavor" {
+  description = "The ID of the VPC that you want to use for your cluster."
+  type        = string
+  default     = "value"
+}
+
+variable "worker_count" {
+  description = "The ID of the VPC that you want to use for your cluster."
+  type        = number
+  default     = 1
 }
