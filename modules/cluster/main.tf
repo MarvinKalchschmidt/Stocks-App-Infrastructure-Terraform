@@ -9,6 +9,7 @@ resource "ibm_container_vpc_cluster" "cluster" {
   flavor            = var.flavor
   worker_count      = var.worker_count
   resource_group_id = var.resource_group_id
+
   zones {
     subnet_id = local.first_subnet.id
     name      = local.first_subnet.zone

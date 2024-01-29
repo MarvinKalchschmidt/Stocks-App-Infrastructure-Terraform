@@ -9,6 +9,7 @@ variable "ibmcloud_api_key" {
 }
 
 
+
 ##############################################################################
 # Account Variables
 ##############################################################################
@@ -91,13 +92,13 @@ variable "subnets" {
 variable "kube_version" {
   description = "Specify the Kubernetes version, including the major.minor version. If you do not include this flag, the default version is used."
   type        = string
-  default     = "value"
+  default     = "1.28.4"
 }
 
 variable "flavor" {
   description = "The flavor of the VPC worker nodes in the default worker pool. This field only affects cluster creation, to manage the default worker pool, create a dedicated worker pool resource."
   type        = string
-  default     = "value"
+  default     = "cx2.2x4"
 }
 
 variable "worker_count" {
