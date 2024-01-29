@@ -15,7 +15,7 @@ output "subnet_ids" {
   ]
 }
 
-output "zone_list" {
+output "subnet_list" {
   description = "A list containing subnet IDs and subnet zones"
   value = [
     for subnet in ibm_is_subnet.subnet : {

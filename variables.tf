@@ -3,7 +3,7 @@
 ##############################################################################
 
 variable "ibmcloud_api_key" {
-  description = "The IBM Cloud platform API key needed to deploy IAM enabled resources"
+  description = "The IBM Cloud platform API key needed to deploy IAM enabled resources."
   type        = string
   sensitive   = true
 }
@@ -43,7 +43,7 @@ variable "resource_group" {
 ##############################################################################
 
 variable "subnets" {
-  description = "List of subnets for the vpc. For each item in each array, a subnet will be created. Items can be either CIDR blocks or total ipv4 addressess. Public gateways will be enabled only in zones where a gateway has been created"
+  description = "List of subnets for the vpc. For each item in each array, a subnet will be created. Items can be either CIDR blocks or total ipv4 addressess."
   type = object({
     zone-1 = list(
       object({
@@ -89,19 +89,19 @@ variable "subnets" {
 ##############################################################################
 
 variable "kube_version" {
-  description = "The ID of the VPC that you want to use for your cluster."
+  description = "Specify the Kubernetes version, including the major.minor version. If you do not include this flag, the default version is used."
   type        = string
   default     = "value"
 }
 
 variable "flavor" {
-  description = "The ID of the VPC that you want to use for your cluster."
+  description = "The flavor of the VPC worker nodes in the default worker pool. This field only affects cluster creation, to manage the default worker pool, create a dedicated worker pool resource."
   type        = string
   default     = "value"
 }
 
 variable "worker_count" {
-  description = "The ID of the VPC that you want to use for your cluster."
+  description = "The number of worker nodes per zone in the default worker pool. Default value 1."
   type        = number
   default     = 1
 }
