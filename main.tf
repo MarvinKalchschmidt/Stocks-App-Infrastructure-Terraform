@@ -22,3 +22,18 @@ module "cluster" {
   depends_on        = [module.vpc]
 }
 
+module "cos-storage" {
+  source            = "./modules/cos-storage"
+  prefix            = var.prefix
+  plan              = var.plan
+  service           = var.service
+  location          = var.location
+  region_location   = var.region
+  storage_class     = var.storage_class
+  resource_group_id = data.ibm_resource_group.resource_group.id
+}
+
+module "minecraft-server" {
+  source     = "./modules/minecraft-server"
+  depends_on = [module.cluster]
+}

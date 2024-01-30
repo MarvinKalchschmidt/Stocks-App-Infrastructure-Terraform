@@ -106,3 +106,31 @@ variable "worker_count" {
   type        = number
   default     = 1
 }
+
+##############################################################################
+# COS Variables
+##############################################################################
+
+variable "service" {
+  description = "TThe name of the service offering."
+  type        = string
+  default     = "cloud-object-storage"
+}
+
+variable "plan" {
+  description = "The name of the plan type supported by service."
+  type        = string
+  default     = "standard"
+}
+
+variable "location" {
+  description = "The name of the plan type supported by service."
+  type        = string
+  default     = "global"
+}
+
+variable "storage_class" {
+  description = "The storage class of the bucket."
+  type        = string
+  default     = "standard"
+}
