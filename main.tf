@@ -2,6 +2,11 @@ data "ibm_resource_group" "resource_group" {
   name = var.resource_group
 }
 
+data "ibm_container_cluster_config" "cluster_foo" {
+  cluster_name_id = module.cluster.cluster_id
+}
+
+
 module "vpc" {
   source            = "./modules/vpc"
   prefix            = var.prefix
