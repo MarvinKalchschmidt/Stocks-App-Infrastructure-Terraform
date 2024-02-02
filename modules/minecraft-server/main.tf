@@ -20,6 +20,8 @@ resource "kubernetes_deployment" "minecraft_server" {
   }
 
   spec {
+    replicas = 1
+
     selector {
       match_labels = {
         app = "minecraft-server"
@@ -41,8 +43,8 @@ resource "kubernetes_deployment" "minecraft_server" {
           image = "itzg/minecraft-server"
 
           port {
-            container_port = 25565
             name           = "main"
+            container_port = 25565
           }
 
           env {
@@ -50,20 +52,25 @@ resource "kubernetes_deployment" "minecraft_server" {
             value = "TRUE"
           }
 
-          env {
+          volume_mount {
+            name       = "mc-data"
+            mount_path = "/data"
+          }
+
+          /*env {
             name  = "TYPE"
             value = "SPIGOT"
           }
 
           env {
             name  = "VERSION"
-            value = "1.19.3"
+            value = "LATEST"
           }
 
           env {
             name  = "MEMORY"
             value = "4G"
-          }
+          }*/
 
           /*dynamic "env" {
             for_each = var.minecraftEnvVariables
@@ -73,7 +80,33 @@ resource "kubernetes_deployment" "minecraft_server" {
             }
           }*/
 
-          image_pull_policy = "Always"
+          liveness_probe {
+            exec {
+              command = ["/usr/local/bin/mc-monitor", "status", "--host", "localhost"]
+            }
+
+            initial_delay_seconds = 120
+            period_seconds        = 60
+          }
+
+          readiness_probe {
+            exec {
+              command = ["/usr/local/bin/mc-monitor", "status", "--host", "localhost"]
+            }
+
+            initial_delay_seconds = 20
+            period_seconds        = 5
+            failure_threshold     = 20
+          }
+
+          //image_pull_policy = "Always"
+        }
+
+        volume {
+          name = "mc-data"
+          empty_dir {
+
+          }
         }
       }
     }
@@ -130,7 +163,7 @@ resource "kubernetes_service" "minecraft_server_service" {
   }
 }
 
-resource "kubernetes_ingress" "minecraft_server_ingress" {
+/*resource "kubernetes_ingress" "minecraft_server_ingress" {
   metadata {
     name      = "minecraft-server-ingress"
     namespace = kubernetes_namespace.minecraft_namespace.metadata.0.name
@@ -153,4 +186,4 @@ resource "kubernetes_ingress" "minecraft_server_ingress" {
       }
     }
   }
-}
+}*/
