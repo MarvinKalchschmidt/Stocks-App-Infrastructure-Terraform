@@ -42,6 +42,7 @@ resource "kubernetes_deployment" "minecraft_server" {
 
           port {
             container_port = 25565
+            name           = "main"
           }
 
           env {
@@ -56,13 +57,21 @@ resource "kubernetes_deployment" "minecraft_server" {
 
           env {
             name  = "VERSION"
-            value = "1.14.4"
+            value = "1.19.3"
           }
 
           env {
             name  = "MEMORY"
-            value = "1G"
+            value = "4G"
           }
+
+          /*dynamic "env" {
+            for_each = var.minecraftEnvVariables
+            content {
+              name = env.value["name"]
+              value = env.value["value"]
+            }
+          }*/
 
           image_pull_policy = "Always"
         }
@@ -118,5 +127,30 @@ resource "kubernetes_service" "minecraft_server_service" {
     }
 
     type = "NodePort"
+  }
+}
+
+resource "kubernetes_ingress" "minecraft_server_ingress" {
+  metadata {
+    name      = "minecraft-server-ingress"
+    namespace = kubernetes_namespace.minecraft_namespace.metadata.0.name
+    annotations = {
+      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
+    }
+  }
+
+  spec {
+    rule {
+      host = "minecraft.yourdomain.com"
+      http {
+        path {
+          path = "/"
+          backend {
+            service_name = kubernetes_service.minecraft_server_service.metadata.0.name
+            service_port = kubernetes_service.minecraft_server_service.spec.0.port.0.node_port
+          }
+        }
+      }
+    }
   }
 }

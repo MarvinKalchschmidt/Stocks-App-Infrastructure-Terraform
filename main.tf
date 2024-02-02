@@ -4,6 +4,7 @@ data "ibm_resource_group" "resource_group" {
 
 data "ibm_container_cluster_config" "cluster_foo" {
   cluster_name_id = module.cluster.cluster_id
+  depends_on      = [module.cluster]
 }
 
 
