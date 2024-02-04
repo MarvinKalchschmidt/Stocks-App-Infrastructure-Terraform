@@ -4,7 +4,8 @@ provider "ibm" {
 }
 
 provider "kubernetes" {
-  host                   = data.ibm_container_cluster_config.cluster_foo.host
-  token                  = data.ibm_container_cluster_config.cluster_foo.token
-  cluster_ca_certificate = data.ibm_container_cluster_config.cluster_foo.ca_certificate
+  host                   = data.ibm_container_cluster_config.cluster.host
+  client_certificate     = data.ibm_container_cluster_config.cluster.admin_certificate
+  client_key             = data.ibm_container_cluster_config.cluster.admin_key
+  cluster_ca_certificate = data.ibm_container_cluster_config.cluster.ca_certificate
 }

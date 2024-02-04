@@ -94,7 +94,7 @@ resource "kubernetes_deployment" "minecraft_server" {
               command = ["/usr/local/bin/mc-monitor", "status", "--host", "localhost"]
             }
 
-            initial_delay_seconds = 20
+            initial_delay_seconds = 60
             period_seconds        = 5
             failure_threshold     = 20
           }
@@ -135,9 +135,40 @@ resource "kubernetes_persistent_volume_claim" "cos_claim" {
 
 
 ##############################################################################
-# Kubernetes Service
+# Kubernetes LoadBalancer Service
 ##############################################################################
 
+resource "kubernetes_service" "minecraft_loadbalancer" {
+  metadata {
+    name      = "minecraft-loadbalancer-service"
+    namespace = kubernetes_namespace.minecraft_namespace.metadata.0.name
+
+    labels = {
+      app = "minecraft-server"
+    }
+  }
+
+  spec {
+    port {
+      protocol    = "TCP"
+      port        = 25565
+      target_port = 25565
+      node_port   = 30072
+    }
+
+    selector = {
+      app = "minecraft-server"
+    }
+
+    type                    = "LoadBalancer"
+    external_traffic_policy = "Cluster"
+  }
+}
+
+
+
+
+/*
 resource "kubernetes_service" "minecraft_server_service" {
   metadata {
     name      = "minecraft-server-service"
@@ -161,7 +192,7 @@ resource "kubernetes_service" "minecraft_server_service" {
 
     type = "NodePort"
   }
-}
+}*/
 
 /*resource "kubernetes_ingress" "minecraft_server_ingress" {
   metadata {
