@@ -39,8 +39,3 @@ module "cos-storage" {
   storage_class     = var.storage_class
   resource_group_id = data.ibm_resource_group.resource_group.id
 }
-
-module "minecraft-server" {
-  source     = "./modules/minecraft-server"
-  depends_on = [module.cluster]
-}

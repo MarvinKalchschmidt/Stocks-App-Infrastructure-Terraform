@@ -65,15 +65,15 @@ variable "subnets" {
   default = {
     zone-1 = [{
       name = "subnet-1"
-      cidr = "10.10.10.0/24"
+      cidr = "10.0.0.0/18"
     }],
     zone-2 = [{
       name = "subnet-2"
-      cidr = "10.20.10.0/24"
+      cidr = "10.0.64.0/18"
     }],
     zone-3 = [{
       name = "subnet-3"
-      cidr = "10.30.10.0/24"
+      cidr = "10.0.128.0/18"
     }]
   }
 
