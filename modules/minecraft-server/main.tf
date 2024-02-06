@@ -10,13 +10,23 @@ resource "kubernetes_namespace" "minecraft_namespace" {
 
 
 ##############################################################################
-# Kubernetes Deployment
+# Kubernetes Namespace
 ##############################################################################
 
-resource "kubernetes_deployment" "minecraft_server" {
+resource "kubernetes_namespace" "compose_namespace" {
   metadata {
-    name      = "minecraft-server"
-    namespace = kubernetes_namespace.minecraft_namespace.metadata.0.name
+    name = "compose-namespace"
+  }
+}
+
+##############################################################################
+# Redis Service
+##############################################################################
+
+resource "kubernetes_deployment" "redis" {
+  metadata {
+    name      = "redis"
+    namespace = kubernetes_namespace.compose_namespace.metadata.0.name
   }
 
   spec {
@@ -24,88 +34,24 @@ resource "kubernetes_deployment" "minecraft_server" {
 
     selector {
       match_labels = {
-        app = "minecraft-server"
+        app = "redis"
       }
     }
 
     template {
       metadata {
-        name = "minecraft-server"
-
         labels = {
-          app = "minecraft-server"
+          app = "redis"
         }
       }
 
       spec {
         container {
-          name  = "minecraft-server"
-          image = "itzg/minecraft-server"
+          name  = "redis"
+          image = "redis:latest"
 
           port {
-            name           = "main"
-            container_port = 25565
-          }
-
-          env {
-            name  = "EULA"
-            value = "TRUE"
-          }
-
-          volume_mount {
-            name       = "mc-data"
-            mount_path = "/data"
-          }
-
-          /*env {
-            name  = "TYPE"
-            value = "SPIGOT"
-          }
-
-          env {
-            name  = "VERSION"
-            value = "LATEST"
-          }
-
-          env {
-            name  = "MEMORY"
-            value = "4G"
-          }*/
-
-          /*dynamic "env" {
-            for_each = var.minecraftEnvVariables
-            content {
-              name = env.value["name"]
-              value = env.value["value"]
-            }
-          }*/
-
-          liveness_probe {
-            exec {
-              command = ["/usr/local/bin/mc-monitor", "status", "--host", "localhost"]
-            }
-
-            initial_delay_seconds = 120
-            period_seconds        = 60
-          }
-
-          readiness_probe {
-            exec {
-              command = ["/usr/local/bin/mc-monitor", "status", "--host", "localhost"]
-            }
-
-            initial_delay_seconds = 60
-            period_seconds        = 5
-            failure_threshold     = 20
-          }
-
-          //image_pull_policy = "Always"
-        }
-
-        volume {
-          name = "mc-data"
-          empty_dir {
-
+            container_port = 6379
           }
         }
       }
@@ -114,24 +60,192 @@ resource "kubernetes_deployment" "minecraft_server" {
 }
 
 ##############################################################################
-# Kubernetes Persistent Volume
+# MongoDB Service
 ##############################################################################
-/*
-resource "kubernetes_persistent_volume_claim" "cos_claim" {
+
+resource "kubernetes_deployment" "mongodb" {
   metadata {
-    name      = "cos-claim"
-    namespace = kubernetes_namespace.minecraft_namespace.metadata.0.name
+    name      = "mongodb"
+    namespace = kubernetes_namespace.compose_namespace.metadata.0.name
   }
 
   spec {
-    access_modes = ["ReadWriteMany"]
-    resources {
-      requests = {
-        storage = "5Gi" // Adjust the storage capacity as needed
+    replicas = 1
+
+    selector {
+      match_labels = {
+        app = "mongodb"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "mongodb"
+        }
+      }
+
+      spec {
+        container {
+          name  = "mongodb"
+          image = "mongo:latest"
+
+          port {
+            container_port = 27017
+          }
+
+          env {
+            name  = "MONGO_INITDB_ROOT_USERNAME"
+            value = "admin"
+          }
+
+          env {
+            name  = "MONGO_INITDB_ROOT_PASSWORD"
+            value = "password"
+          }
+        }
       }
     }
   }
-}*/
+}
+
+##############################################################################
+# Python Server Service
+##############################################################################
+
+resource "kubernetes_deployment" "python_server" {
+  metadata {
+    name      = "python-server"
+    namespace = kubernetes_namespace.compose_namespace.metadata.0.name
+  }
+
+  spec {
+    replicas = 1
+
+    selector {
+      match_labels = {
+        app = "python-server"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "python-server"
+        }
+      }
+
+      spec {
+        container {
+          name  = "python-server"
+          image = "python-server:latest"
+
+          port {
+            container_port = 8000
+          }
+
+          env {
+            name  = "AV_API_KEYS"
+            value = "DTCU39VCLLOGPXW8"
+          }
+
+          env {
+            name  = "REDIS_URL"
+            value = "redis://redis:6379"
+          }
+        }
+      }
+    }
+  }
+}
+
+##############################################################################
+# Web Server Service
+##############################################################################
+
+resource "kubernetes_deployment" "web_server" {
+  metadata {
+    name      = "web-server"
+    namespace = kubernetes_namespace.compose_namespace.metadata.0.name
+  }
+
+  spec {
+    replicas = 1
+
+    selector {
+      match_labels = {
+        app = "web-server"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "web-server"
+        }
+      }
+
+      spec {
+        container {
+          name  = "web-server"
+          image = "web-server:latest"
+
+          port {
+            container_port = 8080
+          }
+
+          env {
+            name  = "MONGO_CONNECTION_STRING"
+            value = "mongodb://mongodb:27017/"
+          }
+        }
+      }
+    }
+  }
+}
+
+##############################################################################
+# Next.js Frontend Service
+##############################################################################
+
+resource "kubernetes_deployment" "next_frontend" {
+  metadata {
+    name      = "next-frontend"
+    namespace = kubernetes_namespace.compose_namespace.metadata.0.name
+  }
+
+  spec {
+    replicas = 1
+
+    selector {
+      match_labels = {
+        app = "next-frontend"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "next-frontend"
+        }
+      }
+
+      spec {
+        container {
+          name  = "next-frontend"
+          image = "next-frontend:latest"
+
+          port {
+            container_port = 3000
+          }
+        }
+      }
+    }
+  }
+}
+
+
+ 
 
 
 ##############################################################################
@@ -164,57 +278,3 @@ resource "kubernetes_service" "minecraft_loadbalancer" {
     external_traffic_policy = "Cluster"
   }
 }
-
-
-
-
-/*
-resource "kubernetes_service" "minecraft_server_service" {
-  metadata {
-    name      = "minecraft-server-service"
-    namespace = kubernetes_namespace.minecraft_namespace.metadata.0.name
-
-    labels = {
-      app = "minecraft-server"
-    }
-  }
-
-  spec {
-    port {
-      protocol  = "TCP"
-      port      = 25565
-      node_port = 30072
-    }
-
-    selector = {
-      app = "minecraft-server"
-    }
-
-    type = "NodePort"
-  }
-}*/
-
-/*resource "kubernetes_ingress" "minecraft_server_ingress" {
-  metadata {
-    name      = "minecraft-server-ingress"
-    namespace = kubernetes_namespace.minecraft_namespace.metadata.0.name
-    annotations = {
-      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
-    }
-  }
-
-  spec {
-    rule {
-      host = "minecraft.yourdomain.com"
-      http {
-        path {
-          path = "/"
-          backend {
-            service_name = kubernetes_service.minecraft_server_service.metadata.0.name
-            service_port = kubernetes_service.minecraft_server_service.spec.0.port.0.node_port
-          }
-        }
-      }
-    }
-  }
-}*/
