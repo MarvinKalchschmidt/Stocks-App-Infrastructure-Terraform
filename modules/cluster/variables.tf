@@ -47,7 +47,3 @@ variable "subnet_list" {
       cidr = string
   }))
 }
-
-
-
-

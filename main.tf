@@ -1,3 +1,7 @@
+##############################################################################
+# Data Sources
+##############################################################################
+
 data "ibm_resource_group" "resource_group" {
   name = var.resource_group
 }
@@ -8,6 +12,9 @@ data "ibm_container_cluster_config" "cluster_config" {
   admin             = true
 }
 
+##############################################################################
+# VPC Module
+##############################################################################
 
 module "vpc" {
   source            = "./modules/vpc"
@@ -16,6 +23,10 @@ module "vpc" {
   subnets           = var.subnets
   resource_group_id = data.ibm_resource_group.resource_group.id
 }
+
+##############################################################################
+# Kubernetes Cluster Module
+##############################################################################
 
 module "cluster" {
   source            = "./modules/cluster"
@@ -29,13 +40,48 @@ module "cluster" {
   depends_on        = [module.vpc]
 }
 
-module "cos-storage" {
-  source            = "./modules/cos-storage"
-  prefix            = var.prefix
-  plan              = var.plan
-  service           = var.service
-  location          = var.location
-  region_location   = var.region
-  storage_class     = var.storage_class
-  resource_group_id = data.ibm_resource_group.resource_group.id
+##############################################################################
+# Python Server Module
+##############################################################################
+
+module "python-server" {
+  source                 = "./modules/python-server"
+  python_server_prefix   = "python-server"
+  docker_image           = "pb070/python-server"
+  port_name              = var.port_name
+  server_port            = "8000"
+  replicas               = var.replicas
+  revision_history_limit = var.revision_history_limit
+  depends_on             = [module.cluster]
+}
+
+##############################################################################
+# Web Server Module
+##############################################################################
+
+module "web-server" {
+  source                 = "./modules/web-server"
+  web_server_prefix      = "web-server"
+  docker_image           = "pb070/web-server"
+  port_name              = var.port_name
+  server_port            = "3000"
+  replicas               = var.replicas
+  revision_history_limit = var.revision_history_limit
+  depends_on             = [module.cluster]
+}
+
+##############################################################################
+# Next.js Frontend  Module
+##############################################################################
+
+module "next-frontend" {
+  source                 = "./modules/next-frontend"
+  next_frontend_prefix   = "next-frontend"
+  docker_image           = "pb070/next-frontend"
+  port_name              = var.port_name
+  server_port            = "8080"
+  node_port              = "30072"
+  replicas               = var.replicas
+  revision_history_limit = var.revision_history_limit
+  depends_on             = [module.cluster]
 }

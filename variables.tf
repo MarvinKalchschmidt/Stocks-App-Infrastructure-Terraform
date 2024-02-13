@@ -17,7 +17,7 @@ variable "ibmcloud_api_key" {
 variable "prefix" {
   description = "A unique identifier need to provision resources. Must begin with a letter."
   type        = string
-  default     = "stock-app"
+  default     = "minecraft-on-kubernetes"
 
   validation {
     error_message = "Unique ID must begin and end with a letter and contain only letters, numbers, and - characters."
@@ -133,4 +133,94 @@ variable "storage_class" {
   description = "The storage class of the bucket."
   type        = string
   default     = "standard"
+}
+
+
+
+
+##############################################################################
+# Minecraft Server Variables
+##############################################################################
+
+variable "kube_prefix" {
+  description = "The prefix for all kubernetes components."
+  type        = string
+  default     = "minecraft-server"
+
+  validation {
+    error_message = "Unique ID must begin and end with a letter and contain only letters, numbers, and - characters."
+    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", var.kube_prefix))
+  }
+}
+
+variable "minecraft_server_image" {
+  description = "The docker image from itzg that dockerizes a Minecraft server in Java version."
+  type        = string
+  default     = "itzg/minecraft-server"
+}
+
+variable "port_name" {
+  description = "The port this server is running on."
+  type        = string
+  default     = "main"
+}
+
+variable "server_port" {
+  description = "The port this server is running on."
+  type        = number
+  default     = 25565
+}
+
+variable "node_port" {
+  description = "The node port this pod is exposed on."
+  type        = number
+  default     = 30072
+}
+
+variable "replicas" {
+  description = "The number of replicas that should be created."
+  type        = number
+  default     = 1
+}
+
+variable "revision_history_limit" {
+  description = "The number of old ReplicaSets to retain to allow rollback. This is a pointer to distinguish between explicit zero and not specified."
+  type        = number
+  default     = 1
+}
+
+variable "minecraft_server_properties" {
+  description = "List of Minecraft server properties."
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = [
+    { name = "ALLOW_FLIGHT", value = "false" },
+    { name = "ALLOW_NETHER", value = "true" },
+    { name = "DIFFICULTY", value = "easy" },
+    { name = "MODE", value = "survival" },
+    { name = "GENERATE_STRUCTURES", value = "true" },
+    { name = "HARDCORE", value = "false" },
+    { name = "LEVEL", value = "Minecraft on Kubernetes" },
+    { name = "SEED", value = "903249166344263133" },
+    { name = "MAX_PLAYERS", value = "10" },
+    { name = "MOTD", value = "Deployed with Terraform!!!" },
+    { name = "PVP", value = "true" },
+    { name = "SERVER_PORT", value = "25565" },
+    { name = "MAX_BUILD_HEIGHT", value = "256" },
+    { name = "SPAWN_ANIMALS", value = "true" },
+    { name = "SPAWN_MONSTERS", value = "true" },
+    { name = "SPAWN_NPCS", value = "true" },
+    { name = "SPAWN_PROTECTION", value = "12" },
+    { name = "VIEW_DISTANCE", value = "12" },
+    { name = "ENABLE_WHITELIST", value = "false" },
+    { name = "ENABLE_COMMAND_BLOCK", value = "true" },
+  ]
+}
+
+variable "operators_list" {
+  description = "List of Minecraft users that have OP rights on the server."
+  type        = string
+  default     = "Haikun"
 }
