@@ -1,5 +1,5 @@
 ##############################################################################
-# Minecraft Server Pod Variables
+# Next Frontend Server Pod Variables
 ##############################################################################
 
 variable "next_frontend_prefix" {
@@ -8,7 +8,7 @@ variable "next_frontend_prefix" {
 }
 
 variable "docker_image" {
-  description = "The docker image from itzg that dockerizes a Minecraft server in Java version."
+  description = "The docker image for the Next.js Frontend."
   type        = string
 }
 

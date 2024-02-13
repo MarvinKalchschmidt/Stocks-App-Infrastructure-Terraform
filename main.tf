@@ -46,10 +46,10 @@ module "cluster" {
 
 module "python-server" {
   source                 = "./modules/python-server"
-  python_server_prefix   = "python-server"
-  docker_image           = "pb070/python-server"
-  port_name              = var.port_name
-  server_port            = "8000"
+  python_server_prefix   = var.next_frontend_prefix
+  docker_image           = var.python_server_image
+  port_name              = var.python_server_port_name
+  server_port            = var.python_server_port
   replicas               = var.replicas
   revision_history_limit = var.revision_history_limit
   depends_on             = [module.cluster]
@@ -61,10 +61,10 @@ module "python-server" {
 
 module "web-server" {
   source                 = "./modules/web-server"
-  web_server_prefix      = "web-server"
-  docker_image           = "pb070/web-server"
-  port_name              = var.port_name
-  server_port            = "3000"
+  web_server_prefix      = var.web_server_prefix
+  docker_image           = var.web_server_image
+  port_name              = var.web_server_port_name
+  server_port            = var.web_server_port
   replicas               = var.replicas
   revision_history_limit = var.revision_history_limit
   depends_on             = [module.cluster]
@@ -76,11 +76,11 @@ module "web-server" {
 
 module "next-frontend" {
   source                 = "./modules/next-frontend"
-  next_frontend_prefix   = "next-frontend"
-  docker_image           = "pb070/next-frontend"
-  port_name              = var.port_name
-  server_port            = "8080"
-  node_port              = "30072"
+  next_frontend_prefix   = var.next_frontend_prefix
+  docker_image           = var.next_frontend_image
+  port_name              = var.next_frontend_port_name
+  server_port            = var.next_frontend_port
+  node_port              = var.next_frontend_node_port
   replicas               = var.replicas
   revision_history_limit = var.revision_history_limit
   depends_on             = [module.cluster]

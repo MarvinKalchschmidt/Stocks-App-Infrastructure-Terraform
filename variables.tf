@@ -10,6 +10,7 @@ variable "ibmcloud_api_key" {
 
 
 
+
 ##############################################################################
 # Account Variables
 ##############################################################################
@@ -17,7 +18,7 @@ variable "ibmcloud_api_key" {
 variable "prefix" {
   description = "A unique identifier need to provision resources. Must begin with a letter."
   type        = string
-  default     = "minecraft-on-kubernetes"
+  default     = "stock-app"
 
   validation {
     error_message = "Unique ID must begin and end with a letter and contain only letters, numbers, and - characters."
@@ -139,43 +140,9 @@ variable "storage_class" {
 
 
 ##############################################################################
-# Minecraft Server Variables
+# Default Kubernetes Deployment Variables
 ##############################################################################
 
-variable "kube_prefix" {
-  description = "The prefix for all kubernetes components."
-  type        = string
-  default     = "minecraft-server"
-
-  validation {
-    error_message = "Unique ID must begin and end with a letter and contain only letters, numbers, and - characters."
-    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", var.kube_prefix))
-  }
-}
-
-variable "minecraft_server_image" {
-  description = "The docker image from itzg that dockerizes a Minecraft server in Java version."
-  type        = string
-  default     = "itzg/minecraft-server"
-}
-
-variable "port_name" {
-  description = "The port this server is running on."
-  type        = string
-  default     = "main"
-}
-
-variable "server_port" {
-  description = "The port this server is running on."
-  type        = number
-  default     = 25565
-}
-
-variable "node_port" {
-  description = "The node port this pod is exposed on."
-  type        = number
-  default     = 30072
-}
 
 variable "replicas" {
   description = "The number of replicas that should be created."
@@ -189,38 +156,111 @@ variable "revision_history_limit" {
   default     = 1
 }
 
-variable "minecraft_server_properties" {
-  description = "List of Minecraft server properties."
-  type = list(object({
-    name  = string
-    value = string
-  }))
-  default = [
-    { name = "ALLOW_FLIGHT", value = "false" },
-    { name = "ALLOW_NETHER", value = "true" },
-    { name = "DIFFICULTY", value = "easy" },
-    { name = "MODE", value = "survival" },
-    { name = "GENERATE_STRUCTURES", value = "true" },
-    { name = "HARDCORE", value = "false" },
-    { name = "LEVEL", value = "Minecraft on Kubernetes" },
-    { name = "SEED", value = "903249166344263133" },
-    { name = "MAX_PLAYERS", value = "10" },
-    { name = "MOTD", value = "Deployed with Terraform!!!" },
-    { name = "PVP", value = "true" },
-    { name = "SERVER_PORT", value = "25565" },
-    { name = "MAX_BUILD_HEIGHT", value = "256" },
-    { name = "SPAWN_ANIMALS", value = "true" },
-    { name = "SPAWN_MONSTERS", value = "true" },
-    { name = "SPAWN_NPCS", value = "true" },
-    { name = "SPAWN_PROTECTION", value = "12" },
-    { name = "VIEW_DISTANCE", value = "12" },
-    { name = "ENABLE_WHITELIST", value = "false" },
-    { name = "ENABLE_COMMAND_BLOCK", value = "true" },
-  ]
+
+##############################################################################
+# Python Server Deployment Variables
+##############################################################################
+
+variable "python_server_prefix" {
+  description = "The prefix for all Python Server related Kubernetes resources."
+  type        = string
+  default     = "python-server"
+
+  validation {
+    error_message = "Unique ID must begin and end with a letter and contain only letters, numbers, and - characters."
+    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", var.python_server_prefix))
+  }
 }
 
-variable "operators_list" {
-  description = "List of Minecraft users that have OP rights on the server."
+variable "python_server_image" {
+  description = "The docker image for the python server."
   type        = string
-  default     = "Haikun"
+  default     = "pb070/python-server"
+}
+
+variable "python_server_port_name" {
+  description = "The port the Python Server can be accessed with."
+  type        = string
+  default     = "pyhton-server"
+}
+
+variable "python_server_port" {
+  description = "The port the Python Server can be accessed with."
+  type        = number
+  default     = 8000
+}
+
+
+
+##############################################################################
+# Web Server Deployment Variables
+##############################################################################
+
+variable "web_server_prefix" {
+  description = "The prefix for all Web Server related Kubernetes resources."
+  type        = string
+  default     = "web-server"
+
+  validation {
+    error_message = "Unique ID must begin and end with a letter and contain only letters, numbers, and - characters."
+    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", var.web_server_prefix))
+  }
+}
+
+variable "web_server_image" {
+  description = "The docker image for the Node.js Backend web server."
+  type        = string
+  default     = "pb070/web-server"
+}
+
+variable "web_server_port_name" {
+  description = "The name the Web Server can be accessed with."
+  type        = string
+  default     = "web-server"
+}
+
+variable "web_server_port" {
+  description = "The port the Web Server can be accessed with."
+  type        = number
+  default     = 3000
+}
+
+
+##############################################################################
+# Next.js Frontend Deployment Variables
+##############################################################################
+
+variable "next_frontend_prefix" {
+  description = "The prefix for all Next.js Frontend related Kubernetes resources."
+  type        = string
+  default     = "next-frontend"
+
+  validation {
+    error_message = "Unique ID must begin and end with a letter and contain only letters, numbers, and - characters."
+    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", var.next_frontend_prefix))
+  }
+}
+
+variable "next_frontend_image" {
+  description = "The docker image for the Next.js Frontend."
+  type        = string
+  default     = "pb070/next-frontend"
+}
+
+variable "next_frontend_port_name" {
+  description = "The name of the port the Next.js Frontend can be accessed with."
+  type        = string
+  default     = "next-frontend"
+}
+
+variable "next_frontend_port" {
+  description = "The port the Next.js Frontend can be accessed with."
+  type        = number
+  default     = 8080
+}
+
+variable "next_frontend_node_port" {
+  description = "The NodePort the Next.js Frontend is exposed on."
+  type        = number
+  default     = 30072
 }

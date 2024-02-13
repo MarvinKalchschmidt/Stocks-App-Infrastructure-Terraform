@@ -8,7 +8,7 @@ variable "python_server_prefix" {
 }
 
 variable "docker_image" {
-  description = "The docker image from itzg that dockerizes a Minecraft server in Java version."
+  description = "The docker image for the python server."
   type        = string
 }
 
