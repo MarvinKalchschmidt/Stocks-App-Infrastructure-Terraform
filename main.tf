@@ -56,7 +56,7 @@ module "redis" {
 
 module "python-server" {
   source                 = "./modules/python-server"
-  python_server_prefix   = var.next_frontend_prefix
+  python_server_prefix   = var.python_server_prefix
   docker_image           = var.python_server_image
   port_name              = var.python_server_port_name
   server_port            = var.python_server_port
