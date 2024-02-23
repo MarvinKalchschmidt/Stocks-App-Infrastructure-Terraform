@@ -1,5 +1,5 @@
 ##############################################################################
-# Web Server Namespace
+# Web Server Kubernetes Namespace
 ##############################################################################
 
 resource "kubernetes_namespace" "web_server_namespace" {
@@ -9,7 +9,7 @@ resource "kubernetes_namespace" "web_server_namespace" {
 }
 
 ##############################################################################
-# Kubernetes Deployment
+# Web Server Kubernetes Deployment
 ##############################################################################
 
 resource "kubernetes_deployment" "web_server_deployment" {
@@ -94,7 +94,7 @@ resource "kubernetes_deployment" "web_server_deployment" {
 }
 
 ##############################################################################
-# Kubernetes Persistent Volume Claim
+# Web Server Kubernetes Persistent Volume Claim
 ##############################################################################
 /*
 resource "kubernetes_persistent_volume_claim" "web_server_pvc" {
@@ -123,12 +123,12 @@ resource "kubernetes_persistent_volume_claim" "web_server_pvc" {
 
 
 ##############################################################################
-# Kubernetes LoadBalancer Service
+# Web Server Kubernetes Service
 ##############################################################################
 
-resource "kubernetes_service" "web_server_loadbalancer" {
+resource "kubernetes_service" "web_server_service" {
   metadata {
-    name      = "${var.web_server_prefix}-loadbalancer-service"
+    name      = "${var.web_server_prefix}-service"
     namespace = kubernetes_namespace.web_server_namespace.metadata.0.name
 
     labels = {
@@ -147,8 +147,7 @@ resource "kubernetes_service" "web_server_loadbalancer" {
       app = "${var.web_server_prefix}"
     }
 
-    type                    = "ClusterIP"
-    external_traffic_policy = "Cluster"
+    type = "ClusterIP"
   }
   depends_on = [kubernetes_deployment.web_server_deployment]
 }

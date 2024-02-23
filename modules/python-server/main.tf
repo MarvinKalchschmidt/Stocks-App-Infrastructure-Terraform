@@ -1,5 +1,5 @@
 ##############################################################################
-# Web Server Namespace
+# Python Server Kubernetes Namespace
 ##############################################################################
 
 resource "kubernetes_namespace" "python_server_namespace" {
@@ -9,7 +9,7 @@ resource "kubernetes_namespace" "python_server_namespace" {
 }
 
 ##############################################################################
-# Kubernetes Deployment
+# Python Server Kubernetes Deployment
 ##############################################################################
 
 resource "kubernetes_deployment" "python_server_deployment" {
@@ -99,7 +99,7 @@ resource "kubernetes_deployment" "python_server_deployment" {
 }
 
 ##############################################################################
-# Kubernetes Persistent Volume Claim
+# Python Server Kubernetes Persistent Volume Claim
 ##############################################################################
 /*
 resource "kubernetes_persistent_volume_claim" "python_server_pvc" {
@@ -128,12 +128,12 @@ resource "kubernetes_persistent_volume_claim" "python_server_pvc" {
 
 
 ##############################################################################
-# Kubernetes LoadBalancer Service
+# Python Server Kubernetes Service
 ##############################################################################
 
-resource "kubernetes_service" "python_server_loadbalancer" {
+resource "kubernetes_service" "python_server_service" {
   metadata {
-    name      = "${var.python_server_prefix}-loadbalancer-service"
+    name      = "${var.python_server_prefix}-service"
     namespace = kubernetes_namespace.python_server_namespace.metadata.0.name
 
     labels = {
@@ -152,8 +152,7 @@ resource "kubernetes_service" "python_server_loadbalancer" {
       app = "${var.python_server_prefix}"
     }
 
-    type                    = "ClusterIP"
-    external_traffic_policy = "Cluster"
+    type = "ClusterIP"
   }
   depends_on = [kubernetes_deployment.python_server_deployment]
 }

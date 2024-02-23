@@ -1,5 +1,5 @@
 ##############################################################################
-# Web Server Namespace
+# Next.js Frontend Kubernetes Namespace
 ##############################################################################
 
 resource "kubernetes_namespace" "next_frontend_namespace" {
@@ -9,7 +9,7 @@ resource "kubernetes_namespace" "next_frontend_namespace" {
 }
 
 ##############################################################################
-# Kubernetes Deployment
+# Next.js Frontend Kubernetes Deployment
 ##############################################################################
 
 resource "kubernetes_deployment" "next_frontend_deployment" {
@@ -91,7 +91,7 @@ resource "kubernetes_deployment" "next_frontend_deployment" {
 }
 
 ##############################################################################
-# Kubernetes LoadBalancer Service
+# Next.js Frontend Kubernetes LoadBalancer Service
 ##############################################################################
 
 resource "kubernetes_service" "next_frontend_loadbalancer" {
