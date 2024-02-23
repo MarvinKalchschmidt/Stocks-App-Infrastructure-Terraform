@@ -55,7 +55,7 @@ resource "kubernetes_deployment" "python_server_deployment" {
 
           env {
             name  = "REDIS_URL"
-            value = "TRUE"
+            value = var.redis_url
           }
 
           volume_mount {

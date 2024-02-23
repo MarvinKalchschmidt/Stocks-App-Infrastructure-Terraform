@@ -35,6 +35,7 @@ locals {
     hostname    = ibm_resource_key.service_credentials[keys(var.service_credential_names)[0]].credentials["connection.rediss.hosts.0.hostname"]
     certificate = ibm_resource_key.service_credentials[keys(var.service_credential_names)[0]].credentials["connection.rediss.certificate.certificate_base64"]
     port        = ibm_resource_key.service_credentials[keys(var.service_credential_names)[0]].credentials["connection.rediss.hosts.0.port"]
+    url         = ibm_resource_key.service_credentials[keys(var.service_credential_names)[0]].credentials["connection.rediss.composed.0"]
     credentials = {
       for service_credential in ibm_resource_key.service_credentials :
       service_credential["name"] => {

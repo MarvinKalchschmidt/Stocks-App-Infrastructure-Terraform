@@ -65,3 +65,8 @@ variable "service_type" {
   }
 }
 
+variable "redis_url" {
+  description = "The URL to connect to redis database."
+  type        = string
+}
+

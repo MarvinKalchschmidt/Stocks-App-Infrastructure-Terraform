@@ -62,7 +62,8 @@ module "python-server" {
   server_port            = var.python_server_port
   replicas               = var.replicas
   revision_history_limit = var.revision_history_limit
-  depends_on             = [module.cluster]
+  redis_url              = module.redis.redis_url
+  depends_on             = [module.cluster, module.redis]
 }
 
 ##############################################################################
