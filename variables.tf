@@ -244,7 +244,7 @@ variable "web_server_port_name" {
 variable "web_server_port" {
   description = "The port the Web Server can be accessed with."
   type        = number
-  default     = 3000
+  default     = 8080
 }
 
 
@@ -278,7 +278,7 @@ variable "next_frontend_port_name" {
 variable "next_frontend_port" {
   description = "The port the Next.js Frontend can be accessed with."
   type        = number
-  default     = 8080
+  default     = 3000
 }
 
 variable "next_frontend_node_port" {
