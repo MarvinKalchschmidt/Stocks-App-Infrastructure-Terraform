@@ -156,6 +156,28 @@ variable "revision_history_limit" {
   default     = 1
 }
 
+variable "image_pull_policy" {
+  description = "The image pull policy for the deployment"
+  type        = string
+  default     = "Always"
+
+  validation {
+    condition     = can(index(["Always", "Never", "IfNotPresent"], var.image_pull_policy))
+    error_message = "Invalid image pull policy. Choose from: Always, Never, IfNotPresent."
+  }
+}
+
+variable "port_protocol" {
+  description = "The protocol for this"
+  type        = string
+  default     = "TCP"
+
+  validation {
+    condition     = can(index(["TCP", "UDP"], var.port_protocol))
+    error_message = "Invalid port protocol. Choose from: TCP or UDP."
+  }
+}
+
 
 ##############################################################################
 # Python Server Deployment Variables

@@ -62,6 +62,8 @@ module "python-server" {
   server_port            = var.python_server_port
   replicas               = var.replicas
   revision_history_limit = var.revision_history_limit
+  port_protocol          = var.port_protocol
+  image_pull_policy      = var.image_pull_policy
   redis_url              = module.redis.redis_url
   depends_on             = [module.cluster, module.redis]
 }
@@ -78,6 +80,8 @@ module "web-server" {
   server_port            = var.web_server_port
   replicas               = var.replicas
   revision_history_limit = var.revision_history_limit
+  port_protocol          = var.port_protocol
+  image_pull_policy = var.image_pull_policy
   //mongodb_url            = module.mongodb.mongodb_url
   depends_on             = [module.cluster, module.mongodb]
 } */
@@ -95,5 +99,8 @@ module "next-frontend" {
   node_port              = var.next_frontend_node_port
   replicas               = var.replicas
   revision_history_limit = var.revision_history_limit
-  depends_on             = [module.cluster]
+  port_protocol          = var.port_protocol
+  image_pull_policy      = var.image_pull_policy
+  //web-server-url = module.web-server.url
+  depends_on = [module.cluster]
 }
