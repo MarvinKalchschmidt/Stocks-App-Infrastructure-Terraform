@@ -69,7 +69,7 @@ module "python-server" {
 ##############################################################################
 # Web Server Module
 ##############################################################################
-
+/*
 module "web-server" {
   source                 = "./modules/web-server"
   web_server_prefix      = var.web_server_prefix
@@ -78,8 +78,9 @@ module "web-server" {
   server_port            = var.web_server_port
   replicas               = var.replicas
   revision_history_limit = var.revision_history_limit
-  depends_on             = [module.cluster]
-}
+  //mongodb_url            = module.mongodb.mongodb_url
+  depends_on             = [module.cluster, module.mongodb]
+} */
 
 ##############################################################################
 # Next.js Frontend  Module
