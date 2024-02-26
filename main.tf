@@ -41,8 +41,21 @@ module "cluster" {
 }
 
 ##############################################################################
+# MongoDB Database Module
+##############################################################################
+
+module "mongodb" {
+  source            = "./modules/mongodb"
+  prefix            = var.prefix
+  region            = var.region
+  resource_group_id = data.ibm_resource_group.resource_group.id
+}
+
+
+##############################################################################
 # Redis Database Module
 ##############################################################################
+
 module "redis" {
   source            = "./modules/redis"
   prefix            = var.prefix
