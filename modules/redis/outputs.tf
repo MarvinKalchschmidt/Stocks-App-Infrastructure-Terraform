@@ -40,3 +40,8 @@ output "redis_url" {
   sensitive   = true
 }
 
+output "redis_binding_secret_name" {
+  description = "The name of the secret that binds the cluster with the redis database."
+  value       = "binding-${ibm_container_bind_service.redis_bind_service["operator-role"].service_instance_name}"
+}
+

@@ -43,9 +43,20 @@ resource "kubernetes_deployment" "python_server_deployment" {
             value = "DTCU39VCLLOGPXW8"
           }
 
+          /*
           env {
             name  = "REDIS_URL"
             value = var.redis_url
+          }*/
+
+          env {
+            name = "BINDING"
+            value_from {
+              secret_key_ref {
+                name = var.redis_binding_secret_name
+                key  = "binding"
+              }
+            }
           }
 
           volume_mount {

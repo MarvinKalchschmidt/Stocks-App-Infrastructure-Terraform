@@ -73,3 +73,8 @@ variable "redis_url" {
   type        = string
 }
 
+variable "redis_binding_secret_name" {
+  description = "The name of the secret that binds the cluster with the redis database."
+  type        = string
+}
+

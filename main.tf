@@ -81,18 +81,19 @@ module "redis" {
 ##############################################################################
 
 module "python-server" {
-  source                 = "./modules/python-server"
-  python_server_prefix   = var.python_server_prefix
-  namespace_name         = module.namespaces.python_server_namespace_name
-  docker_image           = var.python_server_image
-  port_name              = var.python_server_port_name
-  server_port            = var.python_server_port
-  replicas               = var.replicas
-  revision_history_limit = var.revision_history_limit
-  port_protocol          = var.port_protocol
-  image_pull_policy      = var.image_pull_policy
-  redis_url              = module.redis.redis_url
-  depends_on             = [module.cluster, module.redis]
+  source                    = "./modules/python-server"
+  python_server_prefix      = var.python_server_prefix
+  namespace_name            = module.namespaces.python_server_namespace_name
+  docker_image              = var.python_server_image
+  port_name                 = var.python_server_port_name
+  server_port               = var.python_server_port
+  replicas                  = var.replicas
+  revision_history_limit    = var.revision_history_limit
+  port_protocol             = var.port_protocol
+  image_pull_policy         = var.image_pull_policy
+  redis_url                 = module.redis.redis_url
+  redis_binding_secret_name = module.redis.redis_binding_secret_name
+  depends_on                = [module.cluster, module.redis]
 }
 
 ##############################################################################
