@@ -2,6 +2,11 @@
 # Python Server Pod Variables
 ##############################################################################
 
+variable "namespace_name" {
+  description = "The name of the namespace all Kubernetes resources will be created in."
+  type        = string
+}
+
 variable "python_server_prefix" {
   description = "The storage class of the bucket."
   type        = string

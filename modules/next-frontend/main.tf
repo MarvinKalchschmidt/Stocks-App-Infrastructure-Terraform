@@ -1,21 +1,11 @@
 ##############################################################################
-# Next.js Frontend Kubernetes Namespace
-##############################################################################
-
-resource "kubernetes_namespace" "next_frontend_namespace" {
-  metadata {
-    name = "${var.next_frontend_prefix}-namespace"
-  }
-}
-
-##############################################################################
 # Next.js Frontend Kubernetes Deployment
 ##############################################################################
 
 resource "kubernetes_deployment" "next_frontend_deployment" {
   metadata {
     name      = var.next_frontend_prefix
-    namespace = kubernetes_namespace.next_frontend_namespace.metadata.0.name
+    namespace = var.namespace_name
   }
 
   spec {
@@ -97,7 +87,7 @@ resource "kubernetes_deployment" "next_frontend_deployment" {
 resource "kubernetes_service" "next_frontend_loadbalancer" {
   metadata {
     name      = "${var.next_frontend_prefix}-loadbalancer-service"
-    namespace = kubernetes_namespace.next_frontend_namespace.metadata.0.name
+    namespace = var.namespace_name
 
     labels = {
       app = "${var.next_frontend_prefix}"

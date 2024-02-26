@@ -57,3 +57,18 @@ variable "service_credential_names" {
     error_message = "Valid values for service credential roles are 'Administrator', 'Operator', 'Viewer', and `Editor`"
   }
 }
+
+
+##############################################################################
+# Cluster Service Binding Variables
+##############################################################################
+
+variable "cluster_id" {
+  description = "The name of the cluster for this binding."
+  type        = string
+}
+
+variable "namespace_name" {
+  description = "The name of the namespace the binding secret will be created in."
+  type        = string
+}

@@ -45,3 +45,15 @@ locals {
     }
   } : null
 }
+
+##############################################################################
+# Container Bind Service 
+##############################################################################
+
+resource "ibm_container_bind_service" "redis_bind_service" {
+  for_each              = var.service_credential_names
+  cluster_name_id       = var.cluster_id
+  service_instance_name = ibm_database.redis_database.name
+  namespace_id          = var.namespace_name
+  key                   = ibm_resource_key.service_credentials[each.key].guid
+}
