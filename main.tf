@@ -58,7 +58,7 @@ module "mongodb" {
   prefix            = var.prefix
   region            = var.region
   cluster_id        = module.cluster.cluster_id
-  namespace_name    = module.namespaces.python_server_namespace_name
+  namespace_name    = module.namespaces.web_server_namespace_name
   resource_group_id = data.ibm_resource_group.resource_group.id
 }
 
@@ -99,7 +99,7 @@ module "python-server" {
 ##############################################################################
 # Web Server Module
 ##############################################################################
-/*
+
 module "web-server" {
   source                 = "./modules/web-server"
   web_server_prefix      = var.web_server_prefix
@@ -113,7 +113,7 @@ module "web-server" {
   image_pull_policy      = var.image_pull_policy
   //mongodb_url            = module.mongodb.mongodb_url
   depends_on = [module.cluster, module.mongodb]
-} */
+}
 
 ##############################################################################
 # Next.js Frontend  Module
