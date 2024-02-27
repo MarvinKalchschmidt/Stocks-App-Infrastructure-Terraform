@@ -8,7 +8,7 @@ resource "ibm_database" "redis_database" {
   plan              = "standard"
   location          = var.region
   version           = var.redis_version
-  service_endpoints = "private"
+  service_endpoints = "public"
   resource_group_id = var.resource_group_id
 }
 
