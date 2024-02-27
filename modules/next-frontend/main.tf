@@ -39,8 +39,8 @@ resource "kubernetes_deployment" "next_frontend_deployment" {
           }
 
           env {
-            name  = "EULA"
-            value = "TRUE"
+            name  = "GOOGLE_CLIENT_ID"
+            value = "687886123605-6261hrqm3j7no9nd0sqrkuc6tg429sa9.apps.googleusercontent.com"
           }
 
           volume_mount {
