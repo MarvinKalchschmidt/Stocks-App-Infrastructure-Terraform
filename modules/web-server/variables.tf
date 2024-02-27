@@ -2,6 +2,11 @@
 # Web Server Pod Variables
 ##############################################################################
 
+variable "namespace_name" {
+  description = "The name of the namespace all Kubernetes resources will be created in."
+  type        = string
+}
+
 variable "web_server_prefix" {
   description = "The storage class of the bucket."
   type        = string
@@ -35,7 +40,6 @@ variable "revision_history_limit" {
 variable "port_protocol" {
   description = "The protocol for this"
   type        = string
-  default     = "TCP"
 
   validation {
     condition     = can(index(["TCP", "UDP"], var.port_protocol))
@@ -46,7 +50,6 @@ variable "port_protocol" {
 variable "image_pull_policy" {
   description = "The image pull policy for the deployment"
   type        = string
-  default     = "IfNotPresent"
 
   validation {
     condition     = can(index(["Always", "Never", "IfNotPresent"], var.image_pull_policy))
@@ -57,7 +60,7 @@ variable "image_pull_policy" {
 variable "service_type" {
   description = "The type of kubernetes_service to be used"
   type        = string
-  default     = "LoadBalancer"
+  default     = "ClusterIP"
 
   validation {
     condition     = can(index(["ExternalName", "ClusterIP", "NodePort", "LoadBalancer"], var.service_type))

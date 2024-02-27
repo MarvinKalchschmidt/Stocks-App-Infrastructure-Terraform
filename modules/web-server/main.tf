@@ -1,21 +1,11 @@
 ##############################################################################
-# Web Server Kubernetes Namespace
-##############################################################################
-
-resource "kubernetes_namespace" "web_server_namespace" {
-  metadata {
-    name = "${var.web_server_prefix}-namespace"
-  }
-}
-
-##############################################################################
 # Web Server Kubernetes Deployment
 ##############################################################################
 
 resource "kubernetes_deployment" "web_server_deployment" {
   metadata {
     name      = var.web_server_prefix
-    namespace = kubernetes_namespace.web_server_namespace.metadata.0.name
+    namespace = var.namespace_name
   }
 
   spec {
@@ -100,13 +90,13 @@ resource "kubernetes_deployment" "web_server_deployment" {
 resource "kubernetes_persistent_volume_claim" "web_server_pvc" {
   metadata {
     name      = "${var.kube_prefix}-pvc"
-    namespace = kubernetes_namespace.web_server_namespace.metadata.0.name
+    namespace = var.namespace_name
     annotations = {
       "ibm.io/auto-create-bucket" : "false"
       "ibm.io/auto-delete-bucket" : "false"
       "ibm.io/bucket" : var.cos_bucket_name
       "ibm.io/secret-name" : var.cos_secret_name
-      "ibm.io/secret-namespace" : kubernetes_namespace.web_server_namespace.metadata.0.name
+      "ibm.io/secret-namespace" : var.namespace_name
     }
   }
 
@@ -129,7 +119,7 @@ resource "kubernetes_persistent_volume_claim" "web_server_pvc" {
 resource "kubernetes_service" "web_server_service" {
   metadata {
     name      = "${var.web_server_prefix}-service"
-    namespace = kubernetes_namespace.web_server_namespace.metadata.0.name
+    namespace = var.namespace_name
 
     labels = {
       app = "${var.web_server_prefix}"

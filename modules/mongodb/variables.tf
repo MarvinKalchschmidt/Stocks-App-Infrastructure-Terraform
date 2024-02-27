@@ -18,33 +18,20 @@ variable "resource_group_id" {
 }
 
 ##############################################################################
-# Redis Database Variables
+# MongoDB Database Variables
 ##############################################################################
 
-variable "redis_version" {
-  description = "Version of the Redis instance to provision. If no value is passed, the current preferred version of IBM Cloud Databases is used."
+variable "mongodb_version" {
+  description = "Version of the MongoDB instance to provision. If no value is passed, the current preferred version of IBM Cloud Databases is used."
   type        = string
-  default     = "6.2"
+  default     = "6.0"
   validation {
     condition = anytrue([
-      var.redis_version == "5",
-      var.redis_version == "6",
-      var.redis_version == "6.2"
+      var.mongodb_version == "5.0",
+      var.mongodb_version == "6.0"
     ])
-    error_message = "Version must be 5, 6 or 6.2. If no value passed, the current ICD preferred version is used."
+    error_message = "Version must be either 5.0 or 6.0. If no value passed, the current ICD preferred version is used."
   }
-}
-
-variable "configuration" {
-  description = "Database Configuration. Default values will get picked up if not all the values are passed."
-  type = object({
-    maxmemory                   = optional(number)
-    maxmemory-policy            = optional(string)
-    appendonly                  = optional(string)
-    maxmemory-samples           = optional(number)
-    stop-writes-on-bgsave-error = optional(string)
-  })
-  default = null
 }
 
 variable "service_credential_names" {
@@ -57,7 +44,6 @@ variable "service_credential_names" {
     error_message = "Valid values for service credential roles are 'Administrator', 'Operator', 'Viewer', and `Editor`"
   }
 }
-
 
 ##############################################################################
 # Cluster Service Binding Variables

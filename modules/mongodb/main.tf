@@ -1,15 +1,21 @@
 ##############################################################################
-# Redis Database Creation
+# MongoDB Database Creation
 ##############################################################################
 
-resource "ibm_database" "redis_database" {
-  name              = "${var.prefix}-redis-db"
-  service           = "databases-for-redis"
+resource "ibm_database" "mongodb" {
+  name              = "${var.prefix}-mongo-db"
+  service           = "databases-for-mongodb"
   plan              = "standard"
   location          = var.region
-  version           = var.redis_version
-  service_endpoints = "public"
+  version           = var.mongodb_version
+  adminpassword     = "adminpassword1234"
   resource_group_id = var.resource_group_id
+
+  timeouts {
+    create = "120m"
+    update = "120m"
+    delete = "15m"
+  }
 }
 
 
@@ -21,9 +27,9 @@ resource "ibm_resource_key" "service_credentials" {
   for_each             = var.service_credential_names
   name                 = "${var.prefix}-${each.key}"
   role                 = each.value
-  resource_instance_id = ibm_database.redis_database.id
+  resource_instance_id = ibm_database.mongodb.id
 }
-
+/*
 locals {
   # used for output only
   service_credentials_json = length(var.service_credential_names) > 0 ? {
@@ -44,16 +50,17 @@ locals {
       }
     }
   } : null
-}
+}*/
 
 ##############################################################################
 # Container Bind Service 
 ##############################################################################
 
-resource "ibm_container_bind_service" "redis_bind_service" {
+resource "ibm_container_bind_service" "mongodb_bind_service" {
   for_each              = var.service_credential_names
   cluster_name_id       = var.cluster_id
-  service_instance_name = ibm_database.redis_database.name
+  service_instance_name = ibm_database.mongodb.name
   namespace_id          = var.namespace_name
   key                   = ibm_resource_key.service_credentials[each.key].guid
 }
+

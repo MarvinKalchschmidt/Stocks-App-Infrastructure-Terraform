@@ -156,6 +156,28 @@ variable "revision_history_limit" {
   default     = 1
 }
 
+variable "image_pull_policy" {
+  description = "The image pull policy for the deployment"
+  type        = string
+  default     = "Always"
+
+  validation {
+    condition     = can(index(["Always", "Never", "IfNotPresent"], var.image_pull_policy))
+    error_message = "Invalid image pull policy. Choose from: Always, Never, IfNotPresent."
+  }
+}
+
+variable "port_protocol" {
+  description = "The protocol for this"
+  type        = string
+  default     = "TCP"
+
+  validation {
+    condition     = can(index(["TCP", "UDP"], var.port_protocol))
+    error_message = "Invalid port protocol. Choose from: TCP or UDP."
+  }
+}
+
 
 ##############################################################################
 # Python Server Deployment Variables
@@ -222,7 +244,7 @@ variable "web_server_port_name" {
 variable "web_server_port" {
   description = "The port the Web Server can be accessed with."
   type        = number
-  default     = 3000
+  default     = 8080
 }
 
 
@@ -256,7 +278,7 @@ variable "next_frontend_port_name" {
 variable "next_frontend_port" {
   description = "The port the Next.js Frontend can be accessed with."
   type        = number
-  default     = 8080
+  default     = 3000
 }
 
 variable "next_frontend_node_port" {

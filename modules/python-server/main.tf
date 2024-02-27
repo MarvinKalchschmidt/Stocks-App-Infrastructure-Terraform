@@ -1,21 +1,11 @@
 ##############################################################################
-# Python Server Kubernetes Namespace
-##############################################################################
-
-resource "kubernetes_namespace" "python_server_namespace" {
-  metadata {
-    name = "${var.python_server_prefix}-namespace"
-  }
-}
-
-##############################################################################
 # Python Server Kubernetes Deployment
 ##############################################################################
 
 resource "kubernetes_deployment" "python_server_deployment" {
   metadata {
     name      = var.python_server_prefix
-    namespace = kubernetes_namespace.python_server_namespace.metadata.0.name
+    namespace = var.namespace_name
   }
 
   spec {
@@ -53,9 +43,20 @@ resource "kubernetes_deployment" "python_server_deployment" {
             value = "DTCU39VCLLOGPXW8"
           }
 
+          /*
           env {
             name  = "REDIS_URL"
             value = var.redis_url
+          }*/
+
+          env {
+            name = "BINDING"
+            value_from {
+              secret_key_ref {
+                name = var.redis_binding_secret_name
+                key  = "binding"
+              }
+            }
           }
 
           volume_mount {
@@ -105,13 +106,13 @@ resource "kubernetes_deployment" "python_server_deployment" {
 resource "kubernetes_persistent_volume_claim" "python_server_pvc" {
   metadata {
     name      = "${var.kube_prefix}-pvc"
-    namespace = kubernetes_namespace.python_server_namespace.metadata.0.name
+    namespace = var.namespace_name
     annotations = {
       "ibm.io/auto-create-bucket" : "false"
       "ibm.io/auto-delete-bucket" : "false"
       "ibm.io/bucket" : var.cos_bucket_name
       "ibm.io/secret-name" : var.cos_secret_name
-      "ibm.io/secret-namespace" : kubernetes_namespace.python_server_namespace.metadata.0.name
+      "ibm.io/secret-namespace" : var.namespace_name
     }
   }
 
@@ -134,7 +135,7 @@ resource "kubernetes_persistent_volume_claim" "python_server_pvc" {
 resource "kubernetes_service" "python_server_service" {
   metadata {
     name      = "${var.python_server_prefix}-service"
-    namespace = kubernetes_namespace.python_server_namespace.metadata.0.name
+    namespace = var.namespace_name
 
     labels = {
       app = "${var.python_server_prefix}"
