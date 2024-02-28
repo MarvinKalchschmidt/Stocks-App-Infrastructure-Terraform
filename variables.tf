@@ -99,7 +99,8 @@ variable "kube_version" {
 variable "flavor" {
   description = "The flavor of the VPC worker nodes in the default worker pool. This field only affects cluster creation, to manage the default worker pool, create a dedicated worker pool resource."
   type        = string
-  default     = "cx2.2x4"
+  default     = "mx2.2x16"
+  //default     = "cx2.2x4"
 }
 
 variable "worker_count" {
