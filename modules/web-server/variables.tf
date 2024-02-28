@@ -68,3 +68,8 @@ variable "service_type" {
   }
 }
 
+variable "mongodb_binding_secret_name" {
+  description = "The name of the secret that binds the cluster with the redis database."
+  type        = string
+}
+

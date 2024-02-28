@@ -101,18 +101,18 @@ module "python-server" {
 ##############################################################################
 
 module "web-server" {
-  source                 = "./modules/web-server"
-  web_server_prefix      = var.web_server_prefix
-  namespace_name         = module.namespaces.web_server_namespace_name
-  docker_image           = var.web_server_image
-  port_name              = var.web_server_port_name
-  server_port            = var.web_server_port
-  replicas               = var.replicas
-  revision_history_limit = var.revision_history_limit
-  port_protocol          = var.port_protocol
-  image_pull_policy      = var.image_pull_policy
-  //mongodb_url            = module.mongodb.mongodb_url
-  depends_on = [module.cluster, module.mongodb]
+  source                      = "./modules/web-server"
+  web_server_prefix           = var.web_server_prefix
+  namespace_name              = module.namespaces.web_server_namespace_name
+  docker_image                = var.web_server_image
+  port_name                   = var.web_server_port_name
+  server_port                 = var.web_server_port
+  replicas                    = var.replicas
+  revision_history_limit      = var.revision_history_limit
+  port_protocol               = var.port_protocol
+  image_pull_policy           = var.image_pull_policy
+  mongodb_binding_secret_name = module.mongodb.mongodb_binding_secret_name
+  depends_on                  = [module.cluster, module.mongodb]
 }
 
 ##############################################################################

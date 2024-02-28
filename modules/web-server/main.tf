@@ -40,8 +40,13 @@ resource "kubernetes_deployment" "web_server_deployment" {
 
 
           env {
-            name  = "MONGO_CONNECTION_STRING"
-            value = "mongodb://ibm_cloud_10df7442_858e_44d5_a97c_de191221ac88:d23f84bbbea6e55a8d8e5d6ed9dab96b52878487078c41f2214527507bc6a9b1@c395d4c5-3794-4e86-93b1-a17a7953116b-0.b9366f7fcf0b43acb51a70da08153291.databases.appdomain.cloud:32454,c395d4c5-3794-4e86-93b1-a17a7953116b-1.b9366f7fcf0b43acb51a70da08153291.databases.appdomain.cloud:32454,c395d4c5-3794-4e86-93b1-a17a7953116b-2.b9366f7fcf0b43acb51a70da08153291.databases.appdomain.cloud:32454/ibmclouddb?authSource=admin&replicaSet=replset&tls=true"
+            name = "BINDING"
+            value_from {
+              secret_key_ref {
+                name = var.mongodb_binding_secret_name
+                key  = "binding"
+              }
+            }
           }
 
           volume_mount {
