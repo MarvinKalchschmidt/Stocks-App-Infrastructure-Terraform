@@ -9,5 +9,5 @@ output "next_frontend_ip" {
 
 output "next_frontend_url" {
   description = "The URL the Next.js Frontend can be reached from within the cluster"
-  value       = "${kubernetes_service.next_frontend_service.metadata.0.name}.${var.namespace_name}.svc.cluster.local"
+  value       = "http://${kubernetes_service.next_frontend_service.metadata.0.name}.${var.namespace_name}.svc.cluster.local"
 }
