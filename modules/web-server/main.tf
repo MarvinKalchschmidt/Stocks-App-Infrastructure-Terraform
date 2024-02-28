@@ -47,6 +47,10 @@ resource "kubernetes_deployment" "web_server_deployment" {
             container_port = var.server_port
           }
 
+          env {
+            name  = "PYTHON_SERVER_URL"
+            value = var.python_server_url
+          }
 
           env {
             name = "BINDING"

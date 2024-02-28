@@ -204,7 +204,7 @@ variable "python_server_image" {
 variable "python_server_port_name" {
   description = "The port the Python Server can be accessed with."
   type        = string
-  default     = "pyhton-server"
+  default     = "python-server"
 }
 
 variable "python_server_port" {

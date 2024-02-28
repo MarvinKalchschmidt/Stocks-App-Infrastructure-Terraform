@@ -1,8 +1,8 @@
 ##############################################################################
 # Python Server Outputs
 ##############################################################################
-/*
-output "python_server_ip" {
-  description = "The IP to connect with the python server"
-  value       = kubernetes_service.python_server_service.status.0.load_balancer.0.ingress.0.hostname
-}*/
+
+output "python_server_url" {
+  description = "The URL the Python Server can be reached from within the cluster"
+  value       = "http://${kubernetes_service.python_server_service.metadata.0.name}.${var.namespace_name}.svc.cluster.local"
+}

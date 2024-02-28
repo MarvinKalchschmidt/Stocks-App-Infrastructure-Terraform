@@ -53,13 +53,8 @@ resource "kubernetes_deployment" "next_frontend_deployment" {
           }
 
           env {
-            name  = "WEB_SERVER_SERVICE_NAME"
-            value = var.web_server_service_name
-          }
-
-          env {
-            name  = "WEB_SERVER_PORT"
-            value = var.web_server_port
+            name  = "WEB_SERVER_URL"
+            value = var.web_server_url
           }
 
           volume_mount {
@@ -97,6 +92,38 @@ resource "kubernetes_deployment" "next_frontend_deployment" {
       }
     }
   }
+}
+
+
+
+##############################################################################
+# Python Server Kubernetes ClusterIP Service
+##############################################################################
+
+resource "kubernetes_service" "next_frontend_service" {
+  metadata {
+    name      = "${var.next_frontend_prefix}-service"
+    namespace = var.namespace_name
+
+    labels = {
+      app = "${var.next_frontend_prefix}"
+    }
+  }
+
+  spec {
+    port {
+      protocol    = var.port_protocol
+      port        = var.server_port
+      target_port = var.server_port
+    }
+
+    selector = {
+      app = "${var.next_frontend_prefix}"
+    }
+
+    type = "ClusterIP"
+  }
+  depends_on = [kubernetes_deployment.next_frontend_deployment]
 }
 
 ##############################################################################

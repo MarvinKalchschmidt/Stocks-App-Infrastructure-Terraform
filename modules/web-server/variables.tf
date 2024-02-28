@@ -73,3 +73,7 @@ variable "mongodb_binding_secret_name" {
   type        = string
 }
 
+variable "python_server_url" {
+  description = "The URL the Python Server can be reached from within the cluster"
+  type        = string
+}
