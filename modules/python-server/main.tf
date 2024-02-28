@@ -33,6 +33,17 @@ resource "kubernetes_deployment" "python_server_deployment" {
           image             = var.docker_image
           image_pull_policy = var.image_pull_policy
 
+          resources {
+            requests = {
+              memory = "512Mi"
+              cpu    = "128"
+            }
+            limits = {
+              memory = "768Mi"
+              cpu    = "256m"
+            }
+          }
+
           port {
             name           = var.port_name
             container_port = var.server_port
