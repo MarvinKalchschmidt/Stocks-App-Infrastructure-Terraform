@@ -93,7 +93,7 @@ variable "subnets" {
 variable "kube_version" {
   description = "Specify the Kubernetes version, including the major.minor version. If you do not include this flag, the default version is used."
   type        = string
-  default     = "1.28.6"
+  default     = "1.28.7"
 }
 
 variable "flavor" {
