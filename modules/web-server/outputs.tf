@@ -14,6 +14,6 @@ output "web_server_port" {
 
 output "web_server_url" {
   description = "The URL the Web Server can be reached from within the cluster"
-  value       = "http://${kubernetes_service.web_server_service.metadata.0.name}.${var.namespace_name}.svc.cluster.local"
+  value       = "${kubernetes_service.web_server_service.metadata.0.name}.${var.namespace_name}.svc.cluster.local"
 }
 
