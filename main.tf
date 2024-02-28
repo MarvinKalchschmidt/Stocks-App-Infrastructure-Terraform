@@ -120,17 +120,18 @@ module "web-server" {
 ##############################################################################
 
 module "next-frontend" {
-  source                 = "./modules/next-frontend"
-  next_frontend_prefix   = var.next_frontend_prefix
-  namespace_name         = module.namespaces.next_frontend_namespace_name
-  docker_image           = var.next_frontend_image
-  port_name              = var.next_frontend_port_name
-  server_port            = var.next_frontend_port
-  node_port              = var.next_frontend_node_port
-  replicas               = var.replicas
-  revision_history_limit = var.revision_history_limit
-  port_protocol          = var.port_protocol
-  image_pull_policy      = var.image_pull_policy
-  //web-server-url = module.web-server.url
-  depends_on = [module.cluster]
+  source                  = "./modules/next-frontend"
+  next_frontend_prefix    = var.next_frontend_prefix
+  namespace_name          = module.namespaces.next_frontend_namespace_name
+  docker_image            = var.next_frontend_image
+  port_name               = var.next_frontend_port_name
+  server_port             = var.next_frontend_port
+  node_port               = var.next_frontend_node_port
+  replicas                = var.replicas
+  revision_history_limit  = var.revision_history_limit
+  port_protocol           = var.port_protocol
+  image_pull_policy       = var.image_pull_policy
+  web_server_service_name = module.web-server.web_server_service_name
+  web_server_port         = module.web-server.web_server_port
+  depends_on              = [module.cluster]
 }

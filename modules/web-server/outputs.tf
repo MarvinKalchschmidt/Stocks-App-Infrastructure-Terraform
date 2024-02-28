@@ -1,8 +1,13 @@
 ##############################################################################
 # Web Server Outputs
 ##############################################################################
-/*
-output "web_server_ip" {
-  description = "The IP to connect with the web server"
-  value       = kubernetes_service.web_server_service.status.0.load_balancer.0.ingress.0.hostname
-}*/
+
+output "web_server_service_name" {
+  description = "The name of the Web-Server Service."
+  value       = kubernetes_service.web_server_service.metadata.0.name
+}
+
+output "web_server_port" {
+  description = "The port of the Web-Server Service."
+  value       = kubernetes_service.web_server_service.spec.0.port.0.port
+}

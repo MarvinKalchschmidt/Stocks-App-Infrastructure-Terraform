@@ -43,6 +43,16 @@ resource "kubernetes_deployment" "next_frontend_deployment" {
             value = "687886123605-6261hrqm3j7no9nd0sqrkuc6tg429sa9.apps.googleusercontent.com"
           }
 
+          env {
+            name  = "WEB_SERVER_SERVICE_NAME"
+            value = var.web_server_service_name
+          }
+
+          env {
+            name  = "WEB_SERVER_PORT"
+            value = var.web_server_port
+          }
+
           volume_mount {
             name       = "${var.next_frontend_prefix}-data"
             mount_path = "/data"

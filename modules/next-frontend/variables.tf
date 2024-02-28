@@ -72,4 +72,13 @@ variable "service_type" {
     error_message = "Invalid service type. Choose from: ExternalName, ClusterIP, NodePort, LoadBalancer."
   }
 }
+variable "web_server_service_name" {
+  description = "The name of the web-server service"
+  type        = string
+}
+
+variable "web_server_port" {
+  description = "The port of the web-server-service"
+  type        = number
+}
 
