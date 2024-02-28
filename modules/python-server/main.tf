@@ -36,7 +36,7 @@ resource "kubernetes_deployment" "python_server_deployment" {
           resources {
             requests = {
               memory = "512Mi"
-              cpu    = "128"
+              cpu    = "128m"
             }
             limits = {
               memory = "768Mi"

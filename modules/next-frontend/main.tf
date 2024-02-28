@@ -36,7 +36,7 @@ resource "kubernetes_deployment" "next_frontend_deployment" {
           resources {
             requests = {
               memory = "512Mi"
-              cpu    = "128"
+              cpu    = "128m"
             }
             limits = {
               memory = "768Mi"

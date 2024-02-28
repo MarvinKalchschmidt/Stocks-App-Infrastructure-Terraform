@@ -36,7 +36,7 @@ resource "kubernetes_deployment" "web_server_deployment" {
           resources {
             requests = {
               memory = "512Mi"
-              cpu    = "128"
+              cpu    = "128m"
             }
             limits = {
               memory = "768Mi"
